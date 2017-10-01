@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Stop: It's Giphy time</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+
+<body>
+    <div id='displayBtns'> </div>
+    <div class='col-lg-3'>
+        <form id='TV-form'>
+            <label for='newCoolThing'>Add an interest of yours!</label>
+            <input type='text' id='newCoolThing'>
+            <br>
+            <input id='addInterest' type='submit' value='Submit'>
+        </form>
+    </div>
+    <div id='displayDiv'> </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    var coolThings = ['david attenborough', 'carl sagan', 'studio ghibli', 'sand cat', 'waking life', 'parks and recreation', 'magic school bus', 'supernova', 'mc escher', 'stranger things', 'no mans sky', 'koyaanisqatsi', 'steins gate', 'calico cat', 'the office', 'final fantasy', 'twin peaks', '2001 a space odyssey', 'samsara']
+
+function createButtons () { 
+    for (var i = 0; i < coolThings.length; i++) {
+        var coolBtn = $("<button>");
+        coolBtn.addClass('topic-button');
+        coolBtn.attr('data-topic', coolThings[i]);
+        coolBtn.attr('data-name', coolThings[i])
+        coolBtn.text(coolThings[i]);
+        $('#displayBtns').append(coolBtn);
+    }
+ } 
+createButtons();
+
+$('.topic-button').on('click', function(){
+
+   $('#displayDiv').empty();
+
+   var coolThingSearch = $(this).attr("data-name");
+
+     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        coolThingSearch + "&api_key=GshuyBNUOmPH1uCIZGhKwJgnL2lY4XmY&limit=10";
+
+  
+
+    $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+        .done(function(response) {
+        var imageUrl = response.data.image_original_url;
+        var 
+        var topicImage = $("<img>");
+        topicImage.attr("src", imageUrl);
+        topicImage.attr("alt", "cool image");
+         $("#displayDiv").prepend(catImage);
+
+            
+          
+         })
+
+      })
+
+        
+     
+
+  
+
+    </script>
+</body>
+
+</html>
