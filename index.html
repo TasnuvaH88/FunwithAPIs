@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="assets\style.css" />
+    <link rel="stylesheet" type="text/css" href="https://meyerweb.com/eric/tools/css/reset/reset.css" />
+    <title>Random Gifs!</title>
+</head>
+
+<body>
+    <div id='displayBtns'> </div>
+    <br>
+    <div>
+        <form id='userInterests'>
+            <label for='newCoolThing'>Add an interest of yours!</label>
+            <input type='text' id='newCoolThing'>
+            <br>
+            <input id='addInterest' type='submit' value='Submit'>
+        </form>
+    </div>
+    <br>
+    <br>
+    <div id='displayDiv'> </div>
+    <script>
+    var userInterest = $("#newCoolThing").val().trim();
+    var coolThings = ['carl sagan', 'studio ghibli', 'sand cat', 'waking life', 'parks and recreation', 'supernova', 'mc escher', 'stranger things', 'koyaanisqatsi', 'sartre', 'steins gate', 'calico cat', 'the office', 'foucalt', '2001 a space odyssey', 'mr robot']
+     
+     $("#addInterest").on("click", function() {
+          
+
+        coolThings.push(userInterest);
+    
+
+             });
+
+     console.log(coolThings);
+
+    function createButtons() {
+        $('#displayBtns').empty();
+        
+        for (var i = 0; i < coolThings.length; i++) {
+            var coolBtn = $("<button>");
+            coolBtn.addClass('topicBtn');
+            coolBtn.attr('data-topic', coolThings[i]);
+            coolBtn.attr('data-name', coolThings[i])
+            coolBtn.text(coolThings[i]);
+            $('#displayBtns').append(coolBtn);
+        };
+    };
+
+   
+    createButtons();
+
+
+    $('.topicBtn').on('click', function() {
+
+ 
+        var coolThingSearch = $(this).attr("data-name");
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+            coolThingSearch + "&api_key=GshuyBNUOmPH1uCIZGhKwJgnL2lY4XmY&limit=10&g=pg&g=g"
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+
+        }).done(function(response) {
+            var results = response.data;
+
+            for (var i = 0; i < results.length; i++) {
+
+                var imageDiv = $("<div id='item'>");
+                var p = $("<p>").text("Rating: " + results[i].rating);
+                var topicImage = $("<img>");
+                topicImage.attr("src", results[i].images.fixed_height_still.url);
+                topicImage.attr("data-still", results[i].images.fixed_height_still.url);
+                topicImage.attr("data-animate", results[i].images.fixed_height.url);
+                topicImage.attr("class", "gifs");
+                imageDiv.append(p);
+                imageDiv.append(topicImage);
+                $("#displayDiv").prepend(imageDiv);
+
+                $(".gifs").on("click", function() {
+                    var state = $(this).attr("data-state");
+
+                    if (state === "still") {
+                        $(this).attr("src", $(this).attr("data-animate"));
+                        $(this).attr("data-state", "animate");
+                    } else {
+                        $(this).attr("src", $(this).attr("data-still"));
+                        $(this).attr("data-state", "still");
+                    }
+                });
+            }
+        })
+    })
+    </script>
+</body>
+
+</html>
